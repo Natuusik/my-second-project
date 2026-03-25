@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Журнал наблюдений</title>
+
+<!-- jsPDF для PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background: #f5f5f5;
+    }
+    h2 {
+        margin-top: 30px;
+    }
+    .form, .filters {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    input, select, button, textarea {
+        padding: 8px;
+        margin: 5px 0;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    th, td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+    tr:hover {
+        background: #f0f0f0;
+    }
+    .btn {
+        padding: 8px 12px;
+        margin-right: 5px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+    }
+    .edit { background: #ffd966; }
+    .delete { background: #ff6666; color: white; }
+    .export { background: #8fd18f; }
+    .import { background: #6fa8dc; color: white; }
+    .pdf { background: #b4a7d6; }
+</style>
+</head>
+<body>
+
+<h1>Журнал наблюдений</h1>
+
+<div class="form">
+    <h2>Добавить / Редактировать запись</h2>
+
+    <input id="name" placeholder="Имя (например: Пётр)">
+    <input id="date" type="date">
+    <input id="time" type="time">
+
+    <!-- Список событий с возможностью ввести своё -->
+    <select id="event" onchange="checkCustomEvent()">
+        <option value="Болезнь">Болезнь</option>
+        <option value="Встреча с родственниками">Встреча с родственниками</option>
+        <option value="Событие">Событие</option>
+        <option value="Другое">Другое</option>
+        <option value="custom">Своё событие…</option>
+    </select>
+
+    <input id="customEvent" placeholder="Введите своё событие" style="display:none;">
+
+    <textarea id="notes" placeholder="Комментарий"></textarea>
+
+    <button class="btn" onclick="saveEntry()">Сохранить</button>
+</div>
+
+<div class="filters">
+    <h2>Фильтры</h2>
+
+    <input id="filterName" placeholder="Фильтр по имени" oninput="renderTable()">
+    <input id="filterDate" type="date" oninput="renderTable()">
+
+    <select id="filterEvent" onchange="renderTable()">
+        <option value="">Все события</option>
+        <option value="Болезнь">Болезнь</option>
+        <option value="Встреча с родственниками">Встреча с родственниками</option>
+        <option value="Событие">Событие</option>
+        <option value="Другое">Другое</option>
+    </select>
+
+    <h3>Экспорт / Импорт данных</h3>
+    <button class="btn export" onclick="exportTXT()">Скачать TXT</button>
+    <input type="file" id="importFile" class="btn import" accept=".txt" onchange="importTXT()">
+
+    <h3>PDF</h3>
+    <button class="btn pdf" onclick="exportDayPDF()">PDF за выбранный день</button>
+</div>
+
+<h2>Таблица записей</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Имя</th>
+            <th>Дата</th>
+            <th>Время</th>
+            <th>Событие</th>
+            <th>Комментарий</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+</table>
+
+<script>
+let entries = JSON.parse(localStorage.getItem("entries") || "[]");
+let editIndex = null;
+
+function checkCustomEvent() {
+    const eventSelect = document.getElementById("event");
+    const customInput = document.getElementById("customEvent");
+
+    if (eventSelect.value === "custom") {
+        customInput.style.display = "block";
+    } else {
+        customInput.style.display = "none";
+        customInput.value = "";
+    }
+}
+
+function saveEntry() {
+    const eventSelect = document.getElementById("event");
+    const customEvent = document.getElementById("customEvent").value;
+
+    const entry = {
+        name: document.getElementById("name").value,
+        date: document.getElementById("date").value,
+        time: document.getElementById("time").value,
+        event: eventSelect.value === "custom" ? customEvent : eventSelect.value,
+        notes: document.getElementById("notes").value
+    };
+
+    if (!entry.name || !entry.date || !entry.time) {
+        alert("Заполните имя, дату и время");
+        return;
+    }
+
+    if (eventSelect.value === "custom" && !customEvent.trim()) {
+        alert("Введите своё событие");
+        return;
+    }
+
+    if (editIndex !== null) {
+        entries[editIndex] = entry;
+        editIndex = null;
+    } else {
+        entries.push(entry);
+    }
+
+    localStorage.setItem("entries", JSON.stringify(entries));
+    clearForm();
+    renderTable();
+}
+
+function clearForm() {
+    document.getElementById("name").value = "";
+    document.getElementById("date").value = "";
+    document.getElementById("time").value = "";
+    document.getElementById("event").value = "Болезнь";
+    document.getElementById("customEvent").style.display = "none";
+    document.getElementById("customEvent").value = "";
+    document.getElementById("notes").value = "";
+}
+
+function renderTable() {
+    const tbody = document.getElementById("tableBody");
+    tbody.innerHTML = "";
+
+    const fName = document.getElementById("filterName").value.toLowerCase();
+    const fDate = document.getElementById("filterDate").value;
+    const fEvent = document.getElementById("filterEvent").value;
+
+    entries
+        .filter(e =>
+            (!fName || e.name.toLowerCase().includes(fName)) &&
+            (!fDate || e.date === fDate) &&
+            (!fEvent || e.event === fEvent)
+        )
+        .forEach((e, i) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${e.name}</td>
+                <td>${e.date}</td>
+                <td>${e.time}</td>
+                <td>${e.event}</td>
+                <td>${e.notes}</td>
+                <td>
+                    <button class="btn edit" onclick="editEntry(${i})">Редактировать</button>
+                    <button class="btn delete" onclick="deleteEntry(${i})">Удалить</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+}
+
+function editEntry(i) {
+    const e = entries[i];
+    document.getElementById("name").value = e.name;
+    document.getElementById("date").value = e.date;
+    document.getElementById("time").value = e.time;
+
+    const eventSelect = document.getElementById("event");
+    const customInput = document.getElementById("customEvent");
+
+    if (
+        e.event === "Болезнь" ||
+        e.event === "Встреча с родственниками" ||
+        e.event === "Событие" ||
+        e.event === "Другое"
+    ) {
+        eventSelect.value = e.event;
+        customInput.style.display = "none";
+        customInput.value = "";
+    } else {
+        eventSelect.value = "custom";
+        customInput.style.display = "block";
+        customInput.value = e.event;
+    }
+
+    document.getElementById("notes").value = e.notes;
+    editIndex = i;
+}
+
+function deleteEntry(i) {
+    if (confirm("Удалить запись?")) {
+        entries.splice(i, 1);
+        localStorage.setItem("entries", JSON.stringify(entries));
+        renderTable();
+    }
+}
+
+function exportTXT() {
+    let text = "";
+    entries.forEach(e => {
+        text += `${e.name}|${e.date}|${e.time}|${e.event}|${e.notes}\n`;
+    });
+
+    const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "data.txt";
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+function importTXT() {
+    const file = document.getElementById("importFile").files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const lines = e.target.result.split("\n");
+        entries = [];
+        lines.forEach(line => {
+            if (!line.trim()) return;
+            const [name, date, time, event, notes] = line.split("|");
+            entries.push({ name, date, time, event, notes });
+        });
+
+        localStorage.setItem("entries", JSON.stringify(entries));
+        renderTable();
+    };
+
+    reader.readAsText(file);
+}
+
+async function exportDayPDF() {
+    const { jsPDF } = window.jspdf;
+
+    const selectedDate = document.getElementById("filterDate").value;
+
+    if (!selectedDate) {
+        alert("Выберите дату для экспорта");
+        return;
+    }
+
+    const dayEntries = entries.filter(e => e.date === selectedDate);
+
+    if (dayEntries.length === 0) {
+        alert("Нет записей за выбранный день");
+        return;
+    }
+
+    const doc = new jsPDF();
+    doc.setFontSize(14);
+
+    let y = 20;
+
+    doc.text(`Записи за ${selectedDate}`, 10, y);
+    y += 10;
+
+    dayEntries.forEach((e, index) => {
+        doc.text(`${index + 1}. Имя: ${e.name}`, 10, y); y += 8;
+        doc.text(`   Время: ${e.time}`, 10, y); y += 8;
+        doc.text(`   Событие: ${e.event}`, 10, y); y += 8;
+        doc.text(`   Комментарий:`, 10, y); y += 8;
+
+        const notes = doc.splitTextToSize(e.notes, 180);
+        doc.text(notes, 10, y);
+        y += notes.length * 7 + 10;
+
+        if (y > 270) {
+            doc.addPage();
+            y = 20;
+        }
+    });
+
+    doc.save(`Записи_${selectedDate}.pdf`);
+}
+
+renderTable();
+</script>
+
+
+</body>
+</html>
