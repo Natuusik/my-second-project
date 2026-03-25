@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <title>Журнал наблюдений</title>
 
-<!-- jsPDF с поддержкой кириллицы -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+<script src="fira.js"></script>
 
 <style>
     body {
@@ -318,6 +317,7 @@ function exportDayPDF() {
     }
 
     const doc = new jsPDF();
+    doc.setFont("FiraSans-Regular");
     doc.setFontSize(14);
 
     let y = 20;
