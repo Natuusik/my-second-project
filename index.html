@@ -1,54 +1,83 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <title>Журнал наблюдений</title>
+
+<!-- jsPDF с поддержкой кириллицы -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+
 <style>
     body {
         font-family: Arial, sans-serif;
         margin: 20px;
-        background: #f5f5f5;
+        background: linear-gradient(135deg, #e8f0ff, #fdfdfd);
     }
+
+    h1 {
+        text-align: center;
+        color: #2a4d8f;
+        margin-bottom: 30px;
+    }
+
     h2 {
         margin-top: 30px;
+        color: #2a4d8f;
     }
+
     .form, .filters {
         background: white;
-        padding: 15px;
-        border-radius: 8px;
+        padding: 20px;
+        border-radius: 12px;
         margin-bottom: 20px;
-        box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
+
     input, select, button, textarea {
-        padding: 8px;
-        margin: 5px 0;
+        padding: 10px;
+        margin: 8px 0;
         width: 100%;
         box-sizing: border-box;
+        border-radius: 6px;
+        border: 1px solid #ccc;
     }
+
+    textarea {
+        height: 80px;
+    }
+
     table {
         width: 100%;
         border-collapse: collapse;
         background: white;
-        border-radius: 8px;
+        border-radius: 12px;
         overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    th, td {
+
+    th {
+        background: #2a4d8f;
+        color: white;
+        padding: 12px;
+    }
+
+    td {
         padding: 10px;
         border-bottom: 1px solid #ddd;
-        text-align: left;
     }
+
     tr:hover {
-        background: #f0f0f0;
+        background: #f0f4ff;
     }
+
     .btn {
-        padding: 8px 12px;
-        margin-right: 5px;
+        padding: 10px 14px;
         cursor: pointer;
         border: none;
-        border-radius: 5px;
+        border-radius: 6px;
+        font-weight: bold;
     }
+
     .edit { background: #ffd966; }
     .delete { background: #ff6666; color: white; }
     .export { background: #8fd18f; }
@@ -63,11 +92,10 @@
 <div class="form">
     <h2>Добавить / Редактировать запись</h2>
 
-    <input id="name" placeholder="Имя (например: Пётр)">
+    <input id="name" placeholder="Имя">
     <input id="date" type="date">
     <input id="time" type="time">
 
-    <!-- Список событий с возможностью ввести своё -->
     <select id="event" onchange="checkCustomEvent()">
         <option value="Болезнь">Болезнь</option>
         <option value="Встреча с родственниками">Встреча с родственниками</option>
@@ -127,13 +155,7 @@ let editIndex = null;
 function checkCustomEvent() {
     const eventSelect = document.getElementById("event");
     const customInput = document.getElementById("customEvent");
-
-    if (eventSelect.value === "custom") {
-        customInput.style.display = "block";
-    } else {
-        customInput.style.display = "none";
-        customInput.value = "";
-    }
+    customInput.style.display = eventSelect.value === "custom" ? "block" : "none";
 }
 
 function saveEntry() {
@@ -220,15 +242,9 @@ function editEntry(i) {
     const eventSelect = document.getElementById("event");
     const customInput = document.getElementById("customEvent");
 
-    if (
-        e.event === "Болезнь" ||
-        e.event === "Встреча с родственниками" ||
-        e.event === "Событие" ||
-        e.event === "Другое"
-    ) {
+    if (["Болезнь","Встреча с родственниками","Событие","Другое"].includes(e.event)) {
         eventSelect.value = e.event;
         customInput.style.display = "none";
-        customInput.value = "";
     } else {
         eventSelect.value = "custom";
         customInput.style.display = "block";
@@ -272,6 +288,7 @@ function importTXT() {
     reader.onload = function(e) {
         const lines = e.target.result.split("\n");
         entries = [];
+
         lines.forEach(line => {
             if (!line.trim()) return;
             const [name, date, time, event, notes] = line.split("|");
@@ -285,9 +302,7 @@ function importTXT() {
     reader.readAsText(file);
 }
 
-async function exportDayPDF() {
-    const { jsPDF } = window.jspdf;
-
+function exportDayPDF() {
     const selectedDate = document.getElementById("filterDate").value;
 
     if (!selectedDate) {
@@ -331,7 +346,6 @@ async function exportDayPDF() {
 
 renderTable();
 </script>
-
 
 </body>
 </html>
