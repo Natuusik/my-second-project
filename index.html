@@ -5,6 +5,8 @@
 <title>Журнал наблюдений</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+<script src="Roboto-Regular-normal.js"></script>
+
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -316,7 +318,7 @@ function exportDayPDF() {
     }
 
    const doc = new jsPDF();
-doc.setFont("Helvetica");   // ← вот это исправление
+doc.setFont("Roboto-Regular"); // ← вот это исправление
 doc.setFontSize(14);
 
     let y = 20;
