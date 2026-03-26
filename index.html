@@ -5,8 +5,7 @@
 <title>Журнал наблюдений</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/MrRio/jsPDF/dist/fonts/Roboto-Regular-normal.js"></script>
-
+<script src="https://cdn.jsdelivr.net/gh/Parallax/jsPDF-CustomFonts-support@master/dist/fonts/DejaVuSans-normal.js"></script>
 
 <style>
     body {
@@ -317,12 +316,12 @@ function exportDayPDF() {
         alert("Нет записей за выбранный день");
         return;
     }
-
-  const { jsPDF } = window.jspdf;
+const { jsPDF } = window.jspdf;
 const doc = new jsPDF();
 
-doc.setFont("Roboto-Regular"); // ← вот это исправление
+doc.setFont("DejaVuSans");
 doc.setFontSize(14);
+
 
     let y = 20;
 
