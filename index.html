@@ -316,12 +316,15 @@ function exportDayPDF() {
         alert("Нет записей за выбранный день");
         return;
     }
-const { jsPDF } = window.jspdf;
+
+  const { jsPDF } = window.jspdf;
 const doc = new jsPDF();
 
-doc.setFont("DejaVuSans");
+doc.addFileToVFS("DejaVuSans.ttf", DejaVuSans);
+doc.addFont("DejaVuSans.ttf", "DejaVuSans", "normal");
+doc.setFont("DejaVuSans", "normal");
 doc.setFontSize(14);
-
+;
 
     let y = 20;
 
@@ -347,7 +350,6 @@ doc.setFontSize(14);
     doc.save(`Записи_${selectedDate}.pdf`);
 }
 
-renderTable();
 </script>
 
 </body>
