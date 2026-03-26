@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Журнал наблюдений</title>
-<script src="fira.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
 <style>
     body {
@@ -315,9 +315,9 @@ function exportDayPDF() {
         return;
     }
 
-    const doc = new jsPDF();
-    doc.setFont("FiraSans-Regular");
-    doc.setFontSize(14);
+   const doc = new jsPDF();
+doc.setFont("Helvetica");   // ← вот это исправление
+doc.setFontSize(14);
 
     let y = 20;
 
