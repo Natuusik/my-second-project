@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Дневник наблюдений</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+
+<div class="tabs" id="childTabs"></div>
+
+<button class="history-btn" onclick="toggleHistory()">История</button>
+
+<div class="main">
+    <div class="overlay" id="overlay" onclick="toggleHistory()"></div>
+
+    <div class="history-panel" id="historyPanel">
+        <h3>История</h3>
+        <div id="historyContent"></div>
+    </div>
+
+    <div class="container">
+
+        <h1 id="childName">Дневник —</h1>
+
+        <div id="periodSelector" style="margin-bottom:15px;"></div>
+        <div id="quarterBadge" class="quarter-badge" style="display:none;"></div>
+        <div id="selectedDateInfo" style="margin-bottom:15px;color:#555;"></div>
+
+      
+
+<div id="quarterDisplay"></div>
+        <!-- Пункты 1–6 -->
+        <h2>1. Учёба</h2>
+        <textarea id="edu"></textarea>
+
+        <h2>2. Социальные навыки</h2>
+        <textarea id="social"></textarea>
+
+        <h2>3. Здоровье</h2>
+        <textarea id="health"></textarea>
+
+        <h2>4. Дружба</h2>
+        <textarea id="friends"></textarea>
+
+        <h2>5. Семья</h2>
+        <textarea id="family"></textarea>
+
+        <h2>6. Хобби</h2>
+        <textarea id="hobby"></textarea>
+
+        <button onclick="saveQuarter()">Сохранить период</button>
+
+
+        <!-- Пункты 7–8 -->
+      <br>
+        <label>Дата записи:</label><br>
+        <input type="date" id="dateInput"><br>
+       <br>
+    <br>
+     
+    
+
+
+<table id="eventsTable">
+    <tr>
+        <th>Тип события</th>
+        <th>Комментарий</th>
+    </tr>
+</table>
+
+<button onclick="addEventRow()">Добавить событие</button>
+
+
+<table id="recordsTable">
+    <tr>
+        <th>Дата</th>
+        <th>Кратко</th>
+        <th></th>
+    </tr>
+</table>
+
+
+        <button onclick="saveAll()">Сохранить</button>
+        <button onclick="downloadCurrent()">Скачать</button>
+
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
