@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Дневник наблюдений</title>
+    <link rel="stylesheet" href="style.css">
+
+  
+    <!-- PDF библиотеки -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+</head>
+
+<body>
+<div class="container">
+
+    <!-- Вкладки детей -->
+    <div id="childTabs" class="tabs"></div>
+
+    <!-- Вкладки периодов -->
+    <div id="periodTabs" class="period-tabs"></div>
+
+    <!-- Заголовки -->
+    <h1 id="childName">Дневник —</h1>
+    <h2 id="periodTitle"></h2>
+
+    <!-- Карточка периода -->
+    <div id="savedCard" class="saved-card"></div>
+
+    <button id="editBtn" class="big-btn" onclick="enableEditMode()">Редактировать период</button>
+
+    <!-- Поля редактирования периода -->
+    <div id="editBlock" class="edit-block">
+
+        <h3>1. Учёба</h3>
+        <textarea id="edu"></textarea>
+
+        <h3>2. Социальные навыки</h3>
+        <textarea id="social"></textarea>
+
+        <h3>3. Здоровье</h3>
+        <textarea id="health"></textarea>
+
+        <h3>4. Дружба</h3>
+        <textarea id="friends"></textarea>
+
+        <h3>5. Семья</h3>
+        <textarea id="family"></textarea>
+
+        <h3>6. Хобби</h3>
+        <textarea id="hobby"></textarea>
+
+        <button class="big-btn" onclick="saveQuarter()">Сохранить период</button>
+    </div>
+
+   <!-- БЛОК СОБЫТИЙ — красивый общий модуль -->
+<div class="event-card">
+    <div class="event-card-title">Добавить событие</div>
+
+    <div class="date-wrapper" onclick="openCalendar()">
+    <span class="date-label">Дата события</span>
+    <input type="date" id="eventDateInput">
+</div>
+
+
+    <table id="eventsTable">
+        <tr>
+            <th>Тип события</th>
+            <th>Комментарий</th>
+        </tr>
+        <!-- строка добавляется автоматически -->
+    </table>
+
+    <button class="event-save-btn" onclick="saveEvent()">Сохранить событие</button>
+</div>
+
+<!-- СПИСОК СОХРАНЁННЫХ СОБЫТИЙ -->
+<h3 class="events-title">Сохранённые события</h3>
+
+<table id="recordsTable">
+    <tr>
+        <th>Дата</th>
+        <th>Тип</th>
+        <th>Комментарий</th>
+        <th>Действия</th>
+    </tr>
+</table>
+
+
+
+    
+
+    </div>
+
+    <!-- Кнопки экспорта -->
+  <button class="big-btn footer-btn" onclick="downloadPDF()">Скачать PDF</button>
+   <button class="big-btn footer-btn" onclick="exportTXT()">Экспорт TXT</button>
+
+    <input type="file" id="importFile" style="display:none" onchange="importTXT(event)">
+  <button class="big-btn footer-btn" onclick="document.getElementById('importFile').click()">Импорт TXT</button>
+
+</div>
+
+<!-- Скрытая область для PDF -->
+<div id="pdfArea" style="display:none;"></div>
+<div class="footer-space"></div>
+
+
+<script src="script.js"></script>
+</body>
+</html>

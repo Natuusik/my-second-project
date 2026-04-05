@@ -1,0 +1,290 @@
+/* ---------------- ОСНОВНОЕ ---------------- */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    transition: background 0.3s;
+}
+
+.container {
+    max-width: 960px;
+    margin: 20px auto;
+    padding: 20px 24px;
+    background: #ffffffcc;
+    border-radius: 20px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+/* ---------------- ВКЛАДКИ ДЕТЕЙ ---------------- */
+
+.tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.tab {
+    padding: 12px 20px;
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+    border: 2px solid transparent;
+    transition: 0.2s;
+}
+
+.tab.active {
+    border-color: #000;
+}
+
+/* ---------------- ВКЛАДКИ ПЕРИОДОВ ---------------- */
+
+.period-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.period-tab {
+    padding: 10px 18px;
+    border-radius: 12px;
+    background: #e0e0e0;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.period-tab.active {
+    background: #4a90e2;
+    color: #fff;
+}
+
+/* ---------------- КАРТОЧКА ПЕРИОДА ---------------- */
+
+.saved-card {
+    padding: 20px;
+    border-radius: 20px;
+    color: white;
+    font-size: 18px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    background: rgba(0,0,0,0.3);
+}
+
+/* ---------------- БЛОК РЕДАКТИРОВАНИЯ ---------------- */
+
+.edit-block {
+    background: #fdfaff;
+    border: 2px solid #e6dfff;
+    border-radius: 16px;
+    padding: 22px;
+    margin-top: 20px;
+    box-shadow: 0 4px 14px rgba(180, 160, 255, 0.15);
+    display: none;
+    transition: 0.3s ease;
+}
+
+.edit-block h3 {
+    color: #6a5fa8;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.edit-block textarea {
+    width: 100%;
+    min-height: 70px;
+    border: 2px solid #dcd3ff;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 16px;
+    background: #faf8ff;
+    resize: vertical;
+    transition: 0.2s;
+}
+
+.edit-block textarea:focus {
+    border-color: #b9a8ff;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(185, 168, 255, 0.25);
+}
+
+/* ---------------- КНОПКИ ---------------- */
+
+.big-btn {
+    padding: 12px 20px;
+    background: #4a90e2;
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 10px 0;
+}
+
+/* ---------------- ТАБЛИЦЫ ---------------- */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+/* ---------------- ЦВЕТНЫЕ СТРОКИ СОБЫТИЙ ---------------- */
+
+.event-doctor {
+    background: #d9f7d9;
+}
+
+.event-relatives {
+    background: #ffd9d9;
+}
+
+.event-custom {
+    background: #d9e9ff;
+}
+
+.event-study {
+    background: #fff2cc;
+}
+
+/* ---------------- МАРКЕР ---------------- */
+
+.marker {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+/* ---------------- БЛОК СОБЫТИЙ ---------------- */
+
+.event-card {
+    background: #f7faff;
+    border: 3px solid #c7d7ff;
+    border-radius: 18px;
+    padding: 25px;
+    margin-top: 25px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.event-card-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #3a6fd8;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.event-label {
+    font-size: 20px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* ---------------- ДАТА (кликабельный блок) ---------------- */
+
+.date-wrapper {
+    background: #f7faff;
+    border: 2px solid #c7d7ff;
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: 0.2s;
+}
+
+.date-wrapper:hover {
+    background: #eef4ff;
+    border-color: #9bbcff;
+}
+
+.date-label {
+    font-size: 16px;
+    color: #4a6bb3;
+    font-weight: 600;
+}
+
+.date-wrapper input[type="date"] {
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    color: #2a3a5a;
+    cursor: pointer;
+    padding: 0;
+    pointer-events: none;
+}
+
+/* ---------------- ТАБЛИЦА ДОБАВЛЕНИЯ СОБЫТИЙ ---------------- */
+
+#eventsTable {
+    width: 100%;
+    border-spacing: 0 12px;
+}
+
+#eventsTable th {
+    text-align: left;
+    font-size: 18px;
+    padding-bottom: 6px;
+}
+
+#eventsTable select,
+#eventsTable input[type="text"] {
+    width: 100%;
+    font-size: 20px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 2px solid #c7d7ff;
+}
+
+/* ---------------- КНОПКА СОХРАНЕНИЯ СОБЫТИЯ ---------------- */
+
+.event-save-btn {
+    background: #4a8dff;
+    color: white;
+    font-size: 22px;
+    padding: 14px 26px;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 25px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.event-save-btn:hover {
+    background: #2f6fe0;
+    transform: translateY(-2px);
+}
+.edit-block {
+    display: block;
+
+    background: #fcfaff;
+    border: 2px solid #e8e0ff;
+    border-radius: 20px;
+    padding: 26px;
+    margin-top: 24px;
+    box-shadow: 0 8px 24px rgba(180, 160, 255, 0.12);
+    display: block;          /* ← ВСЕГДА ВИДЕН */
+    transition: 0.3s ease;
+}
+.footer-space {
+    height: 50px; /* регулируй как хочешь */
+}
+.footer-btn {
+    margin-left: 40px; /* отступ слева */
+}
