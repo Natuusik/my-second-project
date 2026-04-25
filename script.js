@@ -156,11 +156,12 @@ function enableEditMode() {
     document.getElementById("hobby").value   = q.hobby   || "";
 
     document.getElementById("editBlock").style.display = "block";
+
+    // ⭐ Анимация кнопки "Редактировать период"
+    const editBtn = document.getElementById("editBtn");
+    editBtn.classList.add("btn-flash");
+    setTimeout(() => editBtn.classList.remove("btn-flash"), 400);
 }
-// Анимация кнопки "Редактировать период"//
-const editBtn = document.getElementById("editBtn");
-editBtn.classList.add("btn-flash");
-setTimeout(() => editBtn.classList.remove("btn-flash"), 400);
 
 function saveQuarter() {
     const q = getQuarter();
