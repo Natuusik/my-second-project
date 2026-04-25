@@ -154,6 +154,7 @@ function enableEditMode() {
 
 
 
+
 // ---------------- ДОБАВЛЕНИЕ СОБЫТИЙ ----------------
 
 function addEventRow() {
@@ -283,13 +284,24 @@ function renderEvents() {
 function saveQuarter() {
     const q = getQuarter();
 
-    // ДОБАВЛЯЕМ текст, а не заменяем
-    q.edu     = (q.edu     || "") + (document.getElementById("edu").value     ? "\n" + document.getElementById("edu").value     : "");
-    q.social  = (q.social  || "") + (document.getElementById("social").value  ? "\n" + document.getElementById("social").value  : "");
-    q.health  = (q.health  || "") + (document.getElementById("health").value  ? "\n" + document.getElementById("health").value  : "");
-    q.friends = (q.friends || "") + (document.getElementById("friends").value ? "\n" + document.getElementById("friends").value : "");
-    q.family  = (q.family  || "") + (document.getElementById("family").value  ? "\n" + document.getElementById("family").value  : "");
-    q.hobby   = (q.hobby   || "") + (document.getElementById("hobby").value   ? "\n" + document.getElementById("hobby").value   : "");
+    // ДОБАВЛЯЕМ текст, если поле не пустое
+    if (document.getElementById("edu").value.trim() !== "")
+        q.edu = (q.edu || "") + "\n" + document.getElementById("edu").value;
+
+    if (document.getElementById("social").value.trim() !== "")
+        q.social = (q.social || "") + "\n" + document.getElementById("social").value;
+
+    if (document.getElementById("health").value.trim() !== "")
+        q.health = (q.health || "") + "\n" + document.getElementById("health").value;
+
+    if (document.getElementById("friends").value.trim() !== "")
+        q.friends = (q.friends || "") + "\n" + document.getElementById("friends").value;
+
+    if (document.getElementById("family").value.trim() !== "")
+        q.family = (q.family || "") + "\n" + document.getElementById("family").value;
+
+    if (document.getElementById("hobby").value.trim() !== "")
+        q.hobby = (q.hobby || "") + "\n" + document.getElementById("hobby").value;
 
     save();
     renderSavedCard();
@@ -302,6 +314,7 @@ function saveQuarter() {
     document.getElementById("family").value = "";
     document.getElementById("hobby").value = "";
 }
+
 
 // ---------------- ЗАГРУЗКА РЕБЁНКА ----------------
 
