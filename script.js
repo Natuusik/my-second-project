@@ -281,38 +281,46 @@ function renderEvents() {
         actions.appendChild(del);
     });
 }
+function editQuarter() {
+    const all = loadStorage();
+    const child = getChildData(all, currentChildId);
+    const qData = ensureQuarter(child, currentYear, selectedQuarter);
+    const q = qData.quarterData;
+
+    const roman = ["I","II","III","IV"][selectedQuarter - 1];
+
+    document.getElementById("quarterDisplay").innerHTML = `
+        <div class="title">${roman} период — редактирование</div>
+
+        <p><b>Учёба:</b><br><textarea id="qEditEdu">${q.edu}</textarea></p>
+        <p><b>Социальные навыки:</b><br><textarea id="qEditSocial">${q.social}</textarea></p>
+        <p><b>Здоровье:</b><br><textarea id="qEditHealth">${q.health}</textarea></p>
+        <p><b>Дружба:</b><br><textarea id="qEditFriends">${q.friends}</textarea></p>
+        <p><b>Семья:</b><br><textarea id="qEditFamily">${q.family}</textarea></p>
+        <p><b>Хобби:</b><br><textarea id="qEditHobby">${q.hobby}</textarea></p>
+
+        <button onclick="saveQuarterBlock()">Сохранить изменения</button>
+    `;
+}
+
 function saveQuarter() {
-    const q = getQuarter();
+    const all = loadStorage();
+    const child = getChildData(all, currentChildId);
+    const qData = ensureQuarter(child, currentYear, selectedQuarter);
 
-    // ДОБАВЛЯЕМ текст, если поле не пустое
-    if (document.getElementById("edu").value.trim() !== "")
-        q.edu = (q.edu || "") + "\n" + document.getElementById("edu").value;
+    qData.quarterData.edu = document.getElementById("qEditEdu").value.trim();
+    qData.quarterData.social = document.getElementById("qEditSocial").value.trim();
+    qData.quarterData.health = document.getElementById("qEditHealth").value.trim();
+    qData.quarterData.friends = document.getElementById("qEditFriends").value.trim();
+    qData.quarterData.family = document.getElementById("qEditFamily").value.trim();
+    qData.quarterData.hobby = document.getElementById("qEditHobby").value.trim();
 
-    if (document.getElementById("social").value.trim() !== "")
-        q.social = (q.social || "") + "\n" + document.getElementById("social").value;
+    saveStorage(all);
 
-    if (document.getElementById("health").value.trim() !== "")
-        q.health = (q.health || "") + "\n" + document.getElementById("health").value;
+    renderQuarterDisplay();
+    updateQuarterBadge();
 
-    if (document.getElementById("friends").value.trim() !== "")
-        q.friends = (q.friends || "") + "\n" + document.getElementById("friends").value;
-
-    if (document.getElementById("family").value.trim() !== "")
-        q.family = (q.family || "") + "\n" + document.getElementById("family").value;
-
-    if (document.getElementById("hobby").value.trim() !== "")
-        q.hobby = (q.hobby || "") + "\n" + document.getElementById("hobby").value;
-
-    save();
-    renderSavedCard();
-
-    // очищаем поля
-    document.getElementById("edu").value = "";
-    document.getElementById("social").value = "";
-    document.getElementById("health").value = "";
-    document.getElementById("friends").value = "";
-    document.getElementById("family").value = "";
-    document.getElementById("hobby").value = "";
+    alert("Изменения сохранены.");
 }
 
 
