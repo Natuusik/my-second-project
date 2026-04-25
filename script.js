@@ -52,7 +52,7 @@ function renderChildTabs() {
 
         if (i === currentChild) tab.classList.add("active");
 
-        // Переименование
+        // Переименование по удержанию
         let timer;
         tab.onmousedown = () => {
             timer = setTimeout(() => {
@@ -67,6 +67,7 @@ function renderChildTabs() {
         };
         tab.onmouseup = () => clearTimeout(timer);
 
+        // Переключение ребёнка
         tab.onclick = () => {
             currentChild = i;
             loadChild();
@@ -130,12 +131,13 @@ function renderSavedCard() {
 
     card.innerHTML = `
         <h2>${currentQuarter} период — сохранено</h2>
-        <p><b>Учёба:</b> ${q.edu}</p>
-        <p><b>Социальные навыки:</b> ${q.social}</p>
-        <p><b>Здоровье:</b> ${q.health}</p>
-        <p><b>Дружба:</b> ${q.friends}</p>
-        <p><b>Семья:</b> ${q.family}</p>
-        <p><b>Хобби:</b> ${q.hobby}</p>
+
+        <p><b>Учёба:</b><br>${(q.edu || "").replace(/\n/g, "<br>")}</p>
+        <p><b>Социальные навыки:</b><br>${(q.social || "").replace(/\n/g, "<br>")}</p>
+        <p><b>Здоровье:</b><br>${(q.health || "").replace(/\n/g, "<br>")}</p>
+        <p><b>Дружба:</b><br>${(q.friends || "").replace(/\n/g, "<br>")}</p>
+        <p><b>Семья:</b><br>${(q.family || "").replace(/\n/g, "<br>")}</p>
+        <p><b>Хобби:</b><br>${(q.hobby || "").replace(/\n/g, "<br>")}</p>
     `;
 }
 
@@ -150,10 +152,34 @@ function enableEditMode() {
     document.getElementById("friends").value = q.friends || "";
     document.getElementById("family").value  = q.family  || "";
     document.getElementById("hobby").value   = q.hobby   || "";
+
+    document.getElementById("editBlock").style.display = "block";
 }
 
+function saveQuarter() {
+    const q = getQuarter();
 
+    // ВСЕГДА ЗАМЕНЯЕМ текст (чтобы не разрастался)
+    q.edu     = document.getElementById("edu").value.trim();
+    q.social  = document.getElementById("social").value.trim();
+    q.health  = document.getElementById("health").value.trim();
+    q.friends = document.getElementById("friends").value.trim();
+    q.family  = document.getElementById("family").value.trim();
+    q.hobby   = document.getElementById("hobby").value.trim();
 
+    save();
+    renderSavedCard();
+
+    // очищаем поля и скрываем блок
+    document.getElementById("edu").value = "";
+    document.getElementById("social").value = "";
+    document.getElementById("health").value = "";
+    document.getElementById("friends").value = "";
+    document.getElementById("family").value = "";
+    document.getElementById("hobby").value = "";
+
+    document.getElementById("editBlock").style.display = "none";
+}
 
 // ---------------- ДОБАВЛЕНИЕ СОБЫТИЙ ----------------
 
@@ -199,7 +225,6 @@ function saveEvent() {
     renderEvents();
 
     document.getElementById("eventDateInput").value = "";
-
     addEventRow();
 }
 
@@ -281,48 +306,6 @@ function renderEvents() {
         actions.appendChild(del);
     });
 }
-function editQuarter() {
-    const all = loadStorage();
-    const child = getChildData(all, currentChildId);
-    const qData = ensureQuarter(child, currentYear, selectedQuarter);
-    const q = qData.quarterData;
-
-    const roman = ["I","II","III","IV"][selectedQuarter - 1];
-
-    document.getElementById("quarterDisplay").innerHTML = `
-        <div class="title">${roman} период — редактирование</div>
-
-        <p><b>Учёба:</b><br><textarea id="qEditEdu">${q.edu}</textarea></p>
-        <p><b>Социальные навыки:</b><br><textarea id="qEditSocial">${q.social}</textarea></p>
-        <p><b>Здоровье:</b><br><textarea id="qEditHealth">${q.health}</textarea></p>
-        <p><b>Дружба:</b><br><textarea id="qEditFriends">${q.friends}</textarea></p>
-        <p><b>Семья:</b><br><textarea id="qEditFamily">${q.family}</textarea></p>
-        <p><b>Хобби:</b><br><textarea id="qEditHobby">${q.hobby}</textarea></p>
-
-        <button onclick="saveQuarterBlock()">Сохранить изменения</button>
-    `;
-}
-
-function saveQuarter() {
-    const all = loadStorage();
-    const child = getChildData(all, currentChildId);
-    const qData = ensureQuarter(child, currentYear, selectedQuarter);
-
-    qData.quarterData.edu = document.getElementById("qEditEdu").value.trim();
-    qData.quarterData.social = document.getElementById("qEditSocial").value.trim();
-    qData.quarterData.health = document.getElementById("qEditHealth").value.trim();
-    qData.quarterData.friends = document.getElementById("qEditFriends").value.trim();
-    qData.quarterData.family = document.getElementById("qEditFamily").value.trim();
-    qData.quarterData.hobby = document.getElementById("qEditHobby").value.trim();
-
-    saveStorage(all);
-
-    renderQuarterDisplay();
-    updateQuarterBadge();
-
-    alert("Изменения сохранены.");
-}
-
 
 // ---------------- ЗАГРУЗКА РЕБЁНКА ----------------
 
@@ -340,11 +323,12 @@ function loadChild() {
     document.getElementById("periodTitle").textContent =
         `${currentQuarter} период — ${new Date().getFullYear()}`;
 }
+
 function openCalendar() {
     document.getElementById("eventDateInput").showPicker();
 }
 
-
+// ---------------- ЭКСПОРТ / ИМПОРТ TXT ----------------
 
 function exportTXT() {
     const data = JSON.stringify(storage, null, 2);
@@ -378,12 +362,14 @@ function importTXT(event) {
     };
     reader.readAsText(file);
 }
+
+// ---------------- PDF ----------------
+
 function downloadPDF() {
     const child = storage[currentChild];
     const year = new Date().getFullYear();
     const q = getQuarter();
 
-    // Собираем текст периодов
     let html = `
         <h1>${child.name || "Ребёнок " + (currentChild + 1)}</h1>
         <h2>${currentQuarter} период — ${year}</h2>
@@ -399,13 +385,12 @@ function downloadPDF() {
         <h3>События:</h3>
     `;
 
-    // События
     if (!q.events || Object.keys(q.events).length === 0) {
         html += "<p>Нет событий</p>";
     } else {
         html += "<ul>";
-        Object.keys(q.events).sort().forEach(date => {
-            const ev = q.events[date];
+        Object.keys(q.events).sort().forEach(key => {
+            const ev = q.events[key];
             const type =
                 ev.type === "doctor" ? "Посещение врача" :
                 ev.type === "relatives" ? "Встреча с родственниками" :
@@ -413,17 +398,15 @@ function downloadPDF() {
                 ev.type === "study" ? "Учёба" :
                 "Событие";
 
-            html += `<li><b>${date}</b> — ${type}: ${ev.text}</li>`;
+            html += `<li><b>${ev.date}</b> — ${type}: ${ev.text}</li>`;
         });
         html += "</ul>";
     }
 
-    // Помещаем в скрытый блок
     const pdfArea = document.getElementById("pdfArea");
     pdfArea.innerHTML = html;
     pdfArea.style.display = "block";
 
-    // Генерация PDF
     html2canvas(pdfArea).then(canvas => {
         const imgData = canvas.toDataURL("image/png");
         const pdf = new jspdf.jsPDF("p", "mm", "a4");
@@ -446,14 +429,13 @@ function downloadPDF() {
         }
 
         pdf.save("diary.pdf");
-
-        // Скрываем блок обратно
         pdfArea.style.display = "none";
     });
 }
-window.onload = () => {
-    loadChild();
-    addEventRow(); // ← строка создаётся только здесь
-};
+
 // ---------------- ЗАГРУЗКА ПРИ СТАРТЕ ----------------
 
+window.onload = () => {
+    loadChild();
+    addEventRow();
+};
