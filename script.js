@@ -157,6 +157,11 @@ function enableEditMode() {
 
     document.getElementById("editBlock").style.display = "block";
 }
+// Анимация кнопки "Редактировать период"//
+const editBtn = document.getElementById("editBtn");
+editBtn.classList.add("btn-flash");
+setTimeout(() => editBtn.classList.remove("btn-flash"), 400);
+
 function saveQuarter() {
     const q = getQuarter();
 
@@ -188,6 +193,18 @@ function saveQuarter() {
     }
 
     save();
+    // Анимация кнопки "Сохранить период"
+const saveBtn = document.querySelector("#editBlock .big-btn");
+if (saveBtn) {
+    saveBtn.classList.add("btn-flash");
+    setTimeout(() => saveBtn.classList.remove("btn-flash"), 400);
+}
+
+// Анимация верхнего блока
+const card = document.getElementById("savedCard");
+card.classList.add("saved-flash");
+setTimeout(() => card.classList.remove("saved-flash"), 400);
+
     // Анимация кнопки
 const btn = document.querySelector("#editBlock .big-btn");
 btn.classList.add("btn-flash");
@@ -255,6 +272,16 @@ function saveEvent() {
     }
 
     save();
+    // Анимация кнопки "Сохранить событие"
+const eventBtn = document.querySelector(".event-save-btn");
+eventBtn.classList.add("btn-flash");
+setTimeout(() => eventBtn.classList.remove("btn-flash"), 400);
+
+// Анимация списка событий
+const records = document.getElementById("recordsTable");
+records.classList.add("saved-flash");
+setTimeout(() => records.classList.remove("saved-flash"), 400);
+
     renderEvents();
 
     document.getElementById("eventDateInput").value = "";
