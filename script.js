@@ -159,6 +159,9 @@ function enableEditMode() {
 }
 function saveQuarter() {
     const q = getQuarter();
+const btn = document.querySelector(".big-btn");
+btn.classList.add("save-animate");
+setTimeout(() => btn.classList.remove("save-animate"), 400);
 
     if (isEditing) {
         // 🔥 РЕЖИМ РЕДАКТИРОВАНИЯ — ЗАМЕНА
