@@ -65,12 +65,19 @@ body {
 .saved-card {
     padding: 20px;
     border-radius: 20px;
-    color: white;
+
     font-size: 18px;
     line-height: 1.5;
     margin-bottom: 20px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.15);
     background: rgba(0,0,0,0.3);
+}
+.saved-card b {
+    color: #222;
+}
+
+.saved-card p {
+    color:white ;
 }
 
 /* ---------------- БЛОК РЕДАКТИРОВАНИЯ ---------------- */
