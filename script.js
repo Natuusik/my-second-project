@@ -1,11 +1,11 @@
 // ---------------- НАСТРОЙКИ ЦВЕТОВ ----------------
 
 const childColors = [
-    "#f7dce5", // пудровый
-    "#f9e8c8", // кремовый
-    "#dcefff", // небесный
-    "#e2f7e1", // мятный
-    "#ece3ff"  // лавандовый
+    "#f7dce5",
+    "#f9e8c8",
+    "#dcefff",
+    "#e2f7e1",
+    "#ece3ff"
 ];
 
 const strongColors = [
@@ -24,7 +24,6 @@ let isEditing = false;
 
 let storage = JSON.parse(localStorage.getItem("diary_v5") || "[]");
 
-// Если пусто — создаём 5 детей
 if (storage.length === 0) {
     storage = Array(5).fill(null).map(() => ({
         name: "",
@@ -53,7 +52,6 @@ function renderChildTabs() {
 
         if (i === currentChild) tab.classList.add("active");
 
-        // Переименование по удержанию
         let timer;
         tab.onmousedown = () => {
             timer = setTimeout(() => {
@@ -68,7 +66,6 @@ function renderChildTabs() {
         };
         tab.onmouseup = () => clearTimeout(timer);
 
-        // Переключение ребёнка
         tab.onclick = () => {
             currentChild = i;
             loadChild();
@@ -157,7 +154,6 @@ function enableEditMode() {
 
     document.getElementById("editBlock").style.display = "block";
 
-    // ⭐ Анимация кнопки "Редактировать период"
     const editBtn = document.getElementById("editBtn");
     editBtn.classList.add("btn-flash");
     setTimeout(() => editBtn.classList.remove("btn-flash"), 400);
@@ -166,9 +162,7 @@ function enableEditMode() {
 function saveQuarter() {
     const q = getQuarter();
 
-
     if (isEditing) {
-        // 🔥 РЕЖИМ РЕДАКТИРОВАНИЯ — ЗАМЕНА
         q.edu     = document.getElementById("edu").value.trim();
         q.social  = document.getElementById("social").value.trim();
         q.health  = document.getElementById("health").value.trim();
@@ -176,10 +170,8 @@ function saveQuarter() {
         q.family  = document.getElementById("family").value.trim();
         q.hobby   = document.getElementById("hobby").value.trim();
 
-        isEditing = false; // ← ОБЯЗАТЕЛЬНО!
-    } 
-    else {
-        // 🌿 ДОБАВЛЕНИЕ НОВОЙ ИНФОРМАЦИИ
+        isEditing = false;
+    } else {
         const add = (field, id) => {
             const val = document.getElementById(id).value.trim();
             if (val !== "") q[field] = (q[field] ? q[field] + "\n" : "") + val;
@@ -194,32 +186,18 @@ function saveQuarter() {
     }
 
     save();
-    // Анимация кнопки "Сохранить период"
-const saveBtn = document.querySelector("#editBlock .big-btn");
-if (saveBtn) {
+
+    const saveBtn = document.querySelector("#editBlock .big-btn");
     saveBtn.classList.add("btn-flash");
     setTimeout(() => saveBtn.classList.remove("btn-flash"), 400);
-}
 
-// Анимация верхнего блока
-const card = document.getElementById("savedCard");
-card.classList.add("saved-flash");
-setTimeout(() => card.classList.remove("saved-flash"), 400);
-
-    // Анимация кнопки
-const btn = document.querySelector("#editBlock .big-btn");
-btn.classList.add("btn-flash");
-setTimeout(() => btn.classList.remove("btn-flash"), 400);
-
-// Анимация верхнего блока
-const card = document.getElementById("savedCard");
-card.classList.add("saved-flash");
-setTimeout(() => card.classList.remove("saved-flash"), 400);
+    const card = document.getElementById("savedCard");
+    card.classList.add("saved-flash");
+    setTimeout(() => card.classList.remove("saved-flash"), 400);
 
     renderSavedCard();
     renderEvents();
 
-    // очистка полей
     document.getElementById("edu").value = "";
     document.getElementById("social").value = "";
     document.getElementById("health").value = "";
@@ -229,8 +207,6 @@ setTimeout(() => card.classList.remove("saved-flash"), 400);
 
     document.getElementById("editBlock").style.display = "none";
 }
-
-
 
 // ---------------- ДОБАВЛЕНИЕ СОБЫТИЙ ----------------
 
@@ -273,15 +249,14 @@ function saveEvent() {
     }
 
     save();
-    // Анимация кнопки "Сохранить событие"
-const eventBtn = document.querySelector(".event-save-btn");
-eventBtn.classList.add("btn-flash");
-setTimeout(() => eventBtn.classList.remove("btn-flash"), 400);
 
-// Анимация списка событий
-const records = document.getElementById("recordsTable");
-records.classList.add("saved-flash");
-setTimeout(() => records.classList.remove("saved-flash"), 400);
+    const eventBtn = document.querySelector(".event-save-btn");
+    eventBtn.classList.add("btn-flash");
+    setTimeout(() => eventBtn.classList.remove("btn-flash"), 400);
+
+    const records = document.getElementById("recordsTable");
+    records.classList.add("saved-flash");
+    setTimeout(() => records.classList.remove("saved-flash"), 400);
 
     renderEvents();
 
