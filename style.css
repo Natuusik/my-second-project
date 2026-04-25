@@ -72,13 +72,6 @@ body {
     box-shadow: 0 6px 18px rgba(0,0,0,0.15);
     background: rgba(0,0,0,0.3);
 }
-.saved-card b {
-    color: #222;
-}
-
-.saved-card p {
-    color:white ;
-}
 
 /* ---------------- БЛОК РЕДАКТИРОВАНИЯ ---------------- */
 .edit-block {
