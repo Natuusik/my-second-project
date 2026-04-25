@@ -159,9 +159,7 @@ function enableEditMode() {
 }
 function saveQuarter() {
     const q = getQuarter();
-const btn = document.querySelector(".big-btn");
-btn.classList.add("save-animate");
-setTimeout(() => btn.classList.remove("save-animate"), 400);
+
 
     if (isEditing) {
         // 🔥 РЕЖИМ РЕДАКТИРОВАНИЯ — ЗАМЕНА
@@ -190,6 +188,16 @@ setTimeout(() => btn.classList.remove("save-animate"), 400);
     }
 
     save();
+    // Анимация кнопки
+const btn = document.querySelector("#editBlock .big-btn");
+btn.classList.add("btn-flash");
+setTimeout(() => btn.classList.remove("btn-flash"), 400);
+
+// Анимация верхнего блока
+const card = document.getElementById("savedCard");
+card.classList.add("saved-flash");
+setTimeout(() => card.classList.remove("saved-flash"), 400);
+
     renderSavedCard();
     renderEvents();
 
