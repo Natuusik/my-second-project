@@ -157,8 +157,6 @@ function enableEditMode() {
 
     document.getElementById("editBlock").style.display = "block";
 }
-
-
 function saveQuarter() {
     const q = getQuarter();
 
@@ -171,26 +169,21 @@ function saveQuarter() {
         q.family  = document.getElementById("family").value.trim();
         q.hobby   = document.getElementById("hobby").value.trim();
 
-        isEditing = false;
-    } else {
+        isEditing = false; // ← ОБЯЗАТЕЛЬНО!
+    } 
+    else {
         // 🌿 ДОБАВЛЕНИЕ НОВОЙ ИНФОРМАЦИИ
-        if (document.getElementById("edu").value.trim() !== "")
-            q.edu += (q.edu ? "\n" : "") + document.getElementById("edu").value.trim();
+        const add = (field, id) => {
+            const val = document.getElementById(id).value.trim();
+            if (val !== "") q[field] = (q[field] ? q[field] + "\n" : "") + val;
+        };
 
-        if (document.getElementById("social").value.trim() !== "")
-            q.social += (q.social ? "\n" : "") + document.getElementById("social").value.trim();
-
-        if (document.getElementById("health").value.trim() !== "")
-            q.health += (q.health ? "\n" : "") + document.getElementById("health").value.trim();
-
-        if (document.getElementById("friends").value.trim() !== "")
-            q.friends += (q.friends ? "\n" : "") + document.getElementById("friends").value.trim();
-
-        if (document.getElementById("family").value.trim() !== "")
-            q.family += (q.family ? "\n" : "") + document.getElementById("family").value.trim();
-
-        if (document.getElementById("hobby").value.trim() !== "")
-            q.hobby += (q.hobby ? "\n" : "") + document.getElementById("hobby").value.trim();
+        add("edu", "edu");
+        add("social", "social");
+        add("health", "health");
+        add("friends", "friends");
+        add("family", "family");
+        add("hobby", "hobby");
     }
 
     save();
@@ -207,6 +200,7 @@ function saveQuarter() {
 
     document.getElementById("editBlock").style.display = "none";
 }
+
 
 
 // ---------------- ДОБАВЛЕНИЕ СОБЫТИЙ ----------------
