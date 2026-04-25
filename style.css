@@ -74,6 +74,9 @@ body {
 }
 
 /* ---------------- БЛОК РЕДАКТИРОВАНИЯ ---------------- */
+.edit-block {
+    display: block !important;
+}
 
 .edit-block {
     background: #fdfaff;
