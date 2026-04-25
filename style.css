@@ -291,3 +291,12 @@ table th, table td {
 .footer-btn {
     margin-left: 40px; /* отступ слева */
 }
+.save-animate {
+    animation: pulse 0.4s ease-out;
+}
+
+@keyframes pulse {
+    0%   { transform: scale(1);   background:#ffd8e8; }
+    50%  { transform: scale(1.05); background:#ffb3d1; }
+    100% { transform: scale(1);   background:#ffd8e8; }
+}
