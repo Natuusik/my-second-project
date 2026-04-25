@@ -20,6 +20,7 @@ const strongColors = [
 
 let currentChild = 0;
 let currentQuarter = 1;
+let isEditing = false;
 
 let storage = JSON.parse(localStorage.getItem("diary_v5") || "[]");
 
@@ -145,6 +146,7 @@ function renderSavedCard() {
 
 function enableEditMode() {
     const q = getQuarter();
+    isEditing = true;
 
     document.getElementById("edu").value     = q.edu     || "";
     document.getElementById("social").value  = q.social  || "";
@@ -156,21 +158,46 @@ function enableEditMode() {
     document.getElementById("editBlock").style.display = "block";
 }
 
+
 function saveQuarter() {
     const q = getQuarter();
 
-    // ВСЕГДА ЗАМЕНЯЕМ текст (чтобы не разрастался)
-    q.edu     = document.getElementById("edu").value.trim();
-    q.social  = document.getElementById("social").value.trim();
-    q.health  = document.getElementById("health").value.trim();
-    q.friends = document.getElementById("friends").value.trim();
-    q.family  = document.getElementById("family").value.trim();
-    q.hobby   = document.getElementById("hobby").value.trim();
+    if (isEditing) {
+        // 🔥 РЕЖИМ РЕДАКТИРОВАНИЯ — ЗАМЕНА
+        q.edu     = document.getElementById("edu").value.trim();
+        q.social  = document.getElementById("social").value.trim();
+        q.health  = document.getElementById("health").value.trim();
+        q.friends = document.getElementById("friends").value.trim();
+        q.family  = document.getElementById("family").value.trim();
+        q.hobby   = document.getElementById("hobby").value.trim();
+
+        isEditing = false;
+    } else {
+        // 🌿 ДОБАВЛЕНИЕ НОВОЙ ИНФОРМАЦИИ
+        if (document.getElementById("edu").value.trim() !== "")
+            q.edu += (q.edu ? "\n" : "") + document.getElementById("edu").value.trim();
+
+        if (document.getElementById("social").value.trim() !== "")
+            q.social += (q.social ? "\n" : "") + document.getElementById("social").value.trim();
+
+        if (document.getElementById("health").value.trim() !== "")
+            q.health += (q.health ? "\n" : "") + document.getElementById("health").value.trim();
+
+        if (document.getElementById("friends").value.trim() !== "")
+            q.friends += (q.friends ? "\n" : "") + document.getElementById("friends").value.trim();
+
+        if (document.getElementById("family").value.trim() !== "")
+            q.family += (q.family ? "\n" : "") + document.getElementById("family").value.trim();
+
+        if (document.getElementById("hobby").value.trim() !== "")
+            q.hobby += (q.hobby ? "\n" : "") + document.getElementById("hobby").value.trim();
+    }
 
     save();
     renderSavedCard();
+    renderEvents();
 
-    // очищаем поля и скрываем блок
+    // очистка полей
     document.getElementById("edu").value = "";
     document.getElementById("social").value = "";
     document.getElementById("health").value = "";
@@ -180,6 +207,7 @@ function saveQuarter() {
 
     document.getElementById("editBlock").style.display = "none";
 }
+
 
 // ---------------- ДОБАВЛЕНИЕ СОБЫТИЙ ----------------
 
