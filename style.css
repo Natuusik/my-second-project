@@ -290,13 +290,22 @@ table th, table td {
 }
 .footer-btn {
     margin-left: 40px; /* отступ слева */
-}
-.save-animate {
-    animation: pulse 0.4s ease-out;
+}.btn-flash {
+    animation: flash 0.35s ease-out;
 }
 
-@keyframes pulse {
-    0%   { transform: scale(1);   background:#ffd8e8; }
-    50%  { transform: scale(1.05); background:#ffb3d1; }
-    100% { transform: scale(1);   background:#ffd8e8; }
+@keyframes flash {
+    0%   { transform: scale(1);   opacity: 1; }
+    50%  { transform: scale(1.05); opacity: 0.6; }
+    100% { transform: scale(1);   opacity: 1; }
 }
+
+.saved-flash {
+    animation: savedFlash 0.4s ease-out;
+}
+
+@keyframes savedFlash {
+    0%   { background-color: #fff3; }
+    100% { background-color: transparent; }
+}
+
